@@ -2,18 +2,14 @@ var express = require('express');
 var path = require('path');
 var mongoose = require('mongoose');
 
-var index = require('./routes/index');
-var login = require('./routes/login');
+// require routes
 var applications = require('./routes/applications');
 
+// create express server
 var app = express();
 
-app.use('/', index);
-app.use('/login', login);
+// map routes
 app.use('/api/v1', applications);
-
-// connect to database
-mongoose.connect('mongodb://@localhost/supn');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -50,5 +46,8 @@ app.use(function (err, req, res, next) {
         error: {}
     });
 });
+
+// connect to database
+mongoose.connect('mongodb://@localhost/supn');
 
 module.exports = app;

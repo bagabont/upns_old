@@ -1,4 +1,4 @@
-supn
+SUPN
 ====
 
 Simple Unified Push Notifications

@@ -1,5 +1,5 @@
 var express = require('express');
-var HttpError = require('../modules/HttpError');
+var HttpError = require('../components/HttpError');
 var Service = require('../models/service').Service;
 
 var router = express.Router();
@@ -13,7 +13,6 @@ router.param('name', function (req, res, next, name) {
         next();
     });
 });
-
 
 router.route('/services/:name')
     .get(function (req, res, next) {

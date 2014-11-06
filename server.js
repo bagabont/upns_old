@@ -1,20 +1,20 @@
-var express = require('express');
-var mongoose = require('mongoose');
-var HttpError = require('./modules/HttpError');
-
-// connect to database
-mongoose.connect('mongodb://@localhost/supn');
+var express = require('express'),
+    HttpError = require('./components/HttpError'),
+    mongoose = require('mongoose'),
+    services = require('./routes/services'),
+    subscribers = require('./routes/subscribers');
 
 // create express server
 var app = express();
 app.disable('x-powered-by');
 app.disable('etag');
 
-// create routes
-var services = require('./routes/services');
-
 // map routes
 app.use('/api/v1', services);
+app.use('api/v1', subscribers);
+
+// connect to database
+mongoose.connect('mongodb://@localhost/supn');
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -22,9 +22,11 @@ app.use(function (req, res, next) {
     next(err);
 });
 
+var environment = app.settings.env || 'development';
+
 // development error handler
-if ('development' === app.get('env')) {
-    app.use(function (err, req, res, next) {
+if (environment === 'development') {
+    app.use(function (err, req, res) {
         res.status(err.statusCode || 500).send({
             message: err.message,
             error: err
@@ -33,8 +35,8 @@ if ('development' === app.get('env')) {
 }
 
 //production error handler
-if ('production' === app.get('env')) {
-    app.use(function (err, req, res, next) {
+if (environment === 'production') {
+    app.use(function (err, req, res) {
         res.status(err.statusCode || 500).send({
             message: err.message,
             error: {}

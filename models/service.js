@@ -7,8 +7,4 @@ var serviceSchema = new Schema({
     date_created: {type: Date, required: true, default: Date.now}
 });
 
-var service = mongoose.model('service', serviceSchema);
-
-module.exports = {
-    Service: service
-};
+module.exports = mongoose.model('services', serviceSchema);

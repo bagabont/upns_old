@@ -9,8 +9,4 @@ var subscriberSchema = new Schema({
     date_created: {type: Date, required: true, default: Date.now}
 });
 
-var subscriber = mongoose.model('subscriber', subscriberSchema);
-
-module.exports = {
-    Subscriber: subscriber
-};
+module.exports = mongoose.model('subscribers', subscriberSchema);

@@ -1,8 +1,6 @@
-var express = require('express');
-var HttpError = require('../components/HttpError');
-var Subscriber = require('../models/subscriber').Service;
-
-var router = express.Router();
+var router = require('express').Router(),
+    Subscriber = require('../models/subscriber'),
+    httpErrors = require('../components/HttpErrors');
 
 router.param('id', function (req, res, next, id) {
     Subscriber.findOne({id: id}, function (err, subscriber) {
@@ -17,14 +15,14 @@ router.param('id', function (req, res, next, id) {
 router.route('/subscribers/:id?')
     .get(function (req, res, next) {
         if (!req.subscriber) {
-            return next(new HttpError(404, 'Subscriber not found.'));
+            return next(httpErrors.NotFound);
         } else {
-            res.send(req.service);
+            res.send(req.subscriber);
         }
     })
     .post(function (req, res, next) {
         if (req.subscriber) {
-            return next(new HttpError(409, 'Subscriber already exist.'));
+            return res.status(204).send();
         }
         var subscriber = new Subscriber({
             id: req.params.id,
@@ -36,12 +34,12 @@ router.route('/subscribers/:id?')
             if (err) {
                 return next(err);
             }
-            return res.status(204).send();
+            return res.status(201).send();
         });
     })
     .put(function (req, res, next) {
         if (!req.subscriber) {
-            return next(new HttpError(404, 'Subscriber not found.'));
+            return next(httpErrors.NotFound);
         }
         var query = {id: req.params.id};
         var update = {token: req.query.token};
@@ -54,7 +52,7 @@ router.route('/subscribers/:id?')
     })
     .delete(function (req, res, next) {
         if (!req.subscriber) {
-            return next(new HttpError(404, 'Subscriber not found.'));
+            return next(httpErrors.NotFound);
         }
         var query = {id: req.params.id};
         Subscriber.findOneAndRemove(query, function (err) {

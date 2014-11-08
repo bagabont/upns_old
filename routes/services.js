@@ -1,8 +1,16 @@
-var express = require('express');
-var HttpError = require('../components/HttpError');
-var Service = require('../models/service').Service;
+var router = require('express').Router(),
+    Service = require('../models/service'),
+    httpErrors = require('../components/HttpErrors');
 
-var router = express.Router();
+router.route('/services')
+    .get(function (req, res, next) {
+        Service.find({}, function (err, services) {
+            if (err) {
+                return next(err);
+            }
+            res.send(services);
+        });
+    });
 
 router.param('name', function (req, res, next, name) {
     Service.findOne({name: name}, function (err, service) {
@@ -17,14 +25,14 @@ router.param('name', function (req, res, next, name) {
 router.route('/services/:name')
     .get(function (req, res, next) {
         if (!req.service) {
-            return next(new HttpError(404, 'Service not found.'));
+            return next(httpErrors.NotFound);
         } else {
             res.send(req.service);
         }
     })
     .post(function (req, res, next) {
         if (req.service) {
-            return next(new HttpError(409, 'Service already exist.'));
+            return res.status(204).send();
         }
         var service = new Service({
             name: req.params.name,
@@ -34,12 +42,12 @@ router.route('/services/:name')
             if (err) {
                 return next(err);
             }
-            return res.status(204).send();
+            return res.status(201).send();
         });
     })
     .put(function (req, res, next) {
         if (!req.service) {
-            return next(new HttpError(404, 'Service not found.'));
+            return next(httpErrors.NotFound);
         }
         var query = {name: req.params.name};
         var update = {description: req.query.description};
@@ -52,7 +60,7 @@ router.route('/services/:name')
     })
     .delete(function (req, res, next) {
         if (!req.service) {
-            return next(new HttpError(404, 'Service not found.'));
+            return next(httpErrors.NotFound);
         }
         var query = {name: req.params.name};
         Service.findOneAndRemove(query, function (err) {

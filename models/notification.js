@@ -2,19 +2,17 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 var notificationSchema = new Schema({
-    notification: {
+    payload: {
         text: {type: String},
-        payload: {
-            type: {type: String}
-        }
+        type: {type: String}
     },
-    filter: {
-        service: {type: Array},
-        platform: {type: Array},
-        device_id: {type: String},
+    target: {
+        id: {type: String},
+        services: {type: Array},
+        platforms: {type: Array},
         locale: {type: String},
-        country: {type: String},
-        app_version: {type: String}
+        country: {type: Array},
+        version: {type: String}
     }
 });
 

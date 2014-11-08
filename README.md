@@ -1,9 +1,8 @@
-=======
 # Simple Unified Push Notifications (V1)
 
 Requirements:
 
-`Not clear`
+`Not clear yet`
 
 ## Client-Push Server Integration
 
@@ -23,16 +22,16 @@ Requirements:
 POST /api/v1/notifications
 Content-Type: application/json
 
-notification : {
-  text : ...,
-  payload : {
-    type : ...
-    ...
+{
+  "payload": {
+    "text": "Custom text",
+    "type": "text",
+	"content": "Content text"
+  },
+  "target": {
+    "services": ["test", "test1"],
+    "platforms": ["ios", "android", "wp"]
   }
-  ...
-},
-filter : {
-  ...
 }
 ```
 
@@ -59,19 +58,16 @@ Example:
 POST /api/v1/notifications
 Content-Type: application/json
 
-notification : {
-  text : "Some text",
-  payload : {
-    type : "item",
-    id : "item_id"
+{
+  "payload": {
+    "text": "Custom text",
+    "type": "item",
+    "id": "item_id"
+  },
+  "target": {
+    "services": ["test", "test1"],
+    "platforms": ["ios", "android", "wp"]
   }
-},
-filter : {
-  platform : [
-    "ios",
-    "android",
-    "wp"
-    ]
 }
 ```
 
@@ -82,45 +78,37 @@ Example:
 POST /api/v1/notifications
 Content-Type: application/json
 
-notification : {
-  text : "Custom text",
-  payload : {
-    type : "url",
-    url : "example.com",
-    default_browser : true (for Default Browser) / false (for Internal Browser),
-    browser_title : "Example"
+{
+  "payload": {
+    "text": "Custom text",
+    "type" : "url",
+    "url" : "http://example.com",
+    "default_browser" : true (for Default Browser) / false (for Internal Browser),
+    "browser_title" : "Example"
+  },
+  "target": {
+    "services": ["test", "test1"],
+    "platforms": ["ios", "android", "wp"]
   }
-},
-filter : {
-  platform : [
-    "ios",
-    "android",
-    "wp"
-    ]
 }
 ```
 
-#### Filter
-Use JSON format for filter request param. You can filter by following params:
+#### Target
+Use JSON format for target request param. You can target by following params:
 
-- service
-- device\_id
-- platform
+- services
+- platforms
+- id
 - locale
 - country
-- app\_version
-
-You could use keyword "except" for filtering attributes.  
-For "app\_version" param you can use "=", ">", "\<", "\<=", "\>=", "~\>".  
-Possible values of platform: "ios", "android", "wp".  
-Specify device\_id if you want to send notification to a certain device.  
+- version
 
 ##### Examples:
-Filter all iOS devices from Singapore with application version (less than or equal to 2) or (more than or equal to 4, but less than 5)
+Target all iOS devices from Singapore with application version (less than or equal to 2) or (more than or equal to 4, but less than 5)
 
 ```json
 {
-  "platform" : "ios",
+  "platforms" : "ios",
   "country" : "sg",
   "version" : ["<= 2","~> 4"]
 }
@@ -130,7 +118,7 @@ Filter all android devices from all countries except Bulgaria
 
 ```json
 {
-  "platform" : "android",
+  "platforms" : "android",
   "country" : {
     "except" : "bg"
   }

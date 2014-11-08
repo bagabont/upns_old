@@ -1,6 +1,7 @@
 var router = require('express').Router(),
     bodyParser = require('body-parser'),
-    httpErrors = require('../components/HttpErrors'),
+    httpErrors = require('../components/httpErrors'),
+    messenger = require('../components/unifiedMessenger'),
     Notification = require('../models/notification');
 
 router.use(bodyParser.json());
@@ -15,17 +16,20 @@ router.route('/notifications')
         });
     })
     .post(function (req, res, next) {
-        if (!req.body) {
+        var notification = req.body;
+        if (!notification || !notification.payload || !notification.target) {
             return next(httpErrors.BadRequest);
         }
-        var notification = new Notification(req.body);
-        notification.save(function (err) {
+        messenger.send(notification);
+
+        var notificationModel = new Notification();
+        notificationModel.save(function (err) {
             if (err) {
                 return next(err);
             }
             return res.send({
                 notification: {
-                    id: notification._id
+                    id: notificationModel._id
                 }
             });
         });

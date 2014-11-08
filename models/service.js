@@ -3,8 +3,7 @@ var mongoose = require('mongoose'),
 
 var serviceSchema = new Schema({
     name: {type: String, required: true, trim: true, index: {unique: true}},
-    description: {type: String, required: false},
-    date_created: {type: Date, required: true, default: Date.now}
+    platform: {type: String, required: false}
 });
 
 module.exports = mongoose.model('services', serviceSchema);

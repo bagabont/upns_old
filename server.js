@@ -1,6 +1,6 @@
 var express = require('express'),
     mongoose = require('mongoose'),
-    httpErrors = require('./components/HttpErrors'),
+    httpErrors = require('./components/httpErrors'),
     services = require('./routes/services'),
     notifications = require('./routes/notifications'),
     subscribers = require('./routes/subscribers');

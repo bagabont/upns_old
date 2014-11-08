@@ -1,6 +1,6 @@
 var router = require('express').Router(),
     Subscriber = require('../models/subscriber'),
-    httpErrors = require('../components/HttpErrors');
+    httpErrors = require('../components/httpErrors');
 
 router.param('id', function (req, res, next, id) {
     Subscriber.findOne({id: id}, function (err, subscriber) {

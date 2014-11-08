@@ -1,6 +1,6 @@
 var router = require('express').Router(),
     Service = require('../models/service'),
-    httpErrors = require('../components/HttpErrors');
+    httpErrors = require('../components/httpErrors');
 
 router.route('/services')
     .get(function (req, res, next) {
@@ -36,7 +36,7 @@ router.route('/services/:name')
         }
         var service = new Service({
             name: req.params.name,
-            description: req.query.description
+            platform: req.query.platform
         });
         service.save(function (err) {
             if (err) {
@@ -50,7 +50,7 @@ router.route('/services/:name')
             return next(httpErrors.NotFound);
         }
         var query = {name: req.params.name};
-        var update = {description: req.query.description};
+        var update = {platform: req.query.platform};
         Service.findOneAndUpdate(query, update, function (err) {
             if (err) {
                 return next(err);

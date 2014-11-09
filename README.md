@@ -92,6 +92,10 @@ notification:{
 ```
 
 #### Headers
+
+##### Text 
+Short text notification message.
+
 ##### Type
 Allows different resources to be opened via push notifications. Moreover you could make client to open URL when user clicks on push notification. For URL notification you could set in which browser should the URL be opened and browser title. For launching in the default browser set `"default_browser" :true`, for internal browser `"default_browser" :false`.  
 
@@ -117,9 +121,6 @@ Content-Type: application/json
     }
 }
 ```
-
-#### Payload
-
 
 #### Target
 Use JSON format for target request param. You can target by following params:

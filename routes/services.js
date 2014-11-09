@@ -26,17 +26,20 @@ router.route('/services/:name')
     .get(function (req, res, next) {
         if (!req.service) {
             return next(httpErrors.NotFound);
-        } else {
-            res.send(req.service);
         }
+        res.send(req.service);
     })
     .post(function (req, res, next) {
         if (req.service) {
             return res.status(204).send();
         }
+
+        var name = req.params.name,
+            platform = req.query.platform;
+        
         var service = new Service({
-            name: req.params.name,
-            platform: req.query.platform
+            name: name,
+            platform: platform
         });
         service.save(function (err) {
             if (err) {

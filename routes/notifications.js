@@ -16,27 +16,63 @@ router.route('/notifications')
         });
     })
     .post(function (req, res, next) {
-        var notification = req.body;
-        if (!notification || !notification.payload || !notification.target) {
+        var data = req.body;
+        if (!data || !data.headers || !data.payload || !data.target) {
             return next(httpErrors.BadRequest);
         }
-        messenger.send(notification);
-
-        var notificationModel = new Notification();
-        notificationModel.save(function (err) {
+        // store notification.
+        var notification = new Notification(data);
+        notification.save(function (err) {
             if (err) {
                 return next(err);
             }
-            return res.send({
+            // send back notification ID in response
+            res.send({
                 notification: {
-                    id: notificationModel._id
+                    id: notification._id
                 }
             });
+            // push notification to subscribers
+            messenger.send(notification);
         });
     })
     .delete(function (req, res, next) {
-        Notification.remove().exec();
+        Notification.remove().exec(function (err) {
+            if (err) {
+                return next(err);
+            }
+        });
         return res.status(204).send();
+    });
+
+router.route('/notifications/:id')
+    .get(function (req, res, next) {
+        Notification.findOne({_id: req.params.id}, function (err, notification) {
+            if (err) {
+                return next(err);
+            }
+            res.send(notification);
+        });
+    })
+    .post(function (req, res, next) {
+        Notification.findOne({_id: req.params.id}, function (err, notification) {
+            if (err) {
+                return next(err);
+            }
+            if (!notification || !notification.headers || !notification.payload || !notification.target) {
+                return next(httpErrors.BadRequest);
+            }
+
+            // push notification to subscribers
+            messenger.send(notification);
+
+            // send back notification ID in response
+            return res.send({
+                notification: {
+                    id: notification._id
+                }
+            });
+        });
     });
 
 module.exports = router;

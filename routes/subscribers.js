@@ -21,21 +21,36 @@ router.route('/subscribers/:id?')
         }
     })
     .post(function (req, res, next) {
+        var id = req.params.id,
+            token = req.query.token,
+            platform = req.query.platform,
+            service = req.query.service;
+
         if (req.subscriber) {
-            return res.status(204).send();
+            var query = {id: id};
+            var update = {token: token};
+            Subscriber.findOneAndUpdate(query, update, function (err) {
+                if (err) {
+                    return next(err);
+                }
+                return res.status(204).send();
+            });
         }
-        var subscriber = new Subscriber({
-            id: req.params.id,
-            token: req.query.token,
-            platform: req.query.platform,
-            service: req.query.service
-        });
-        subscriber.save(function (err) {
-            if (err) {
-                return next(err);
-            }
-            return res.status(201).send();
-        });
+        else {
+            var subscriber = new Subscriber({
+                id: id,
+                token: token,
+                platform: platform,
+                service: service
+            });
+            subscriber.save(function (err) {
+                if (err) {
+                    return next(err);
+                }
+                console.log('Subscriber id: ' + subscriber.id);
+                return res.status(201).send();
+            });
+        }
     })
     .put(function (req, res, next) {
         if (!req.subscriber) {

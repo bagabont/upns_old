@@ -12,40 +12,56 @@ var UnifiedMessenger = function () {
 
 UnifiedMessenger.prototype.send = function (notification) {
     if (!notification.target) {
-        throw new Error('Target not defined.')
+        throw new Error('Target not defined.');
     }
+    if (!notification.headers) {
+        throw new Error('Headers not defined.');
+    }
+    if (!notification.payload) {
+        throw new Error('Payload not defined.');
+    }
+
     var target = notification.target;
-    var services = target.services;
-    var platforms = target.platforms;
-    var id = target.id;
 
-    if (!services) {
-        throw new Error('Services not defined.');
-    }
-    Subscriber
-        .find({})
-        .where('service').in(services)
-        .where('platform').in(platforms)
+    Subscriber.find({})
+        .where('service').in(target.services)
+        .where('platform').in(target.platforms)
         .exec(function (err, subscribers) {
-            for (var i = 0; i < subscribers.length; i += 1) {
-                var subscriber = subscribers[i];
-                var token = subscriber.token;
+            if (err) {
+                throw err;
+            }
 
-                switch (subscriber.platform.toLowerCase()) {
+            for (var i = 0; i < subscribers.length; i += 1) {
+                var platform = subscribers[i].platform,
+                    token = subscribers[i].token;
+
+                switch (platform.toLowerCase()) {
                     case 'windows':
-                        mpns.sendToast(token, 'Some text', 'Hi there!', function (err) {
-                            if (err) throw err;
-                        });
+                        pushToWindows(token, notification);
                         break;
-                    case'ios':
-                        console.log('iOS not supported');
+                    case 'ios':
+                        console.log('Not implemented');
                         break;
                     case 'android':
-                        console.log('Android not supported');
+                        console.log('Not implemented');
                         break;
                 }
             }
-        });
+        }
+    );
 };
+
+function pushToWindows(token, notification) {
+    var title = notification.headers.text.toString(),
+        content = notification.headers.type == 'text' ? notification.payload.content : '',
+        id = notification._id;
+
+    var options = {text1: title, text2: content, param: '?nid=' + id};
+    mpns.sendToast(token, options, function (err) {
+        if (err) {
+            throw err;
+        }
+    });
+}
 
 module.exports = new UnifiedMessenger();

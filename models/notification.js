@@ -2,10 +2,11 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 var notificationSchema = new Schema({
-    payload: {
+    headers: {
         text: {type: String},
         type: {type: String}
     },
+    payload: {},
     target: {
         id: {type: String},
         services: {type: Array},

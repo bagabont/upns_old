@@ -3,7 +3,7 @@ var mongoose = require('mongoose'),
 
 var serviceSchema = new Schema({
     name: {type: String, required: true, trim: true, index: {unique: true}},
-    platform: {type: String, required: false}
+    platform: {type: String, enum: ['windows', 'ios', 'android'], required: true}
 });
 
 module.exports = mongoose.model('services', serviceSchema);

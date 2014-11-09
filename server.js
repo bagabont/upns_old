@@ -3,6 +3,7 @@ var express = require('express'),
     httpErrors = require('./components/httpErrors'),
     services = require('./routes/services'),
     notifications = require('./routes/notifications'),
+    payloads = require('./routes/payloads'),
     subscribers = require('./routes/subscribers');
 
 // create express server
@@ -10,10 +11,11 @@ var app = express();
 app.disable('x-powered-by');
 app.disable('etag');
 
-// map routes
+// middleware API routes
 app.use('/api/v1', services);
 app.use('/api/v1', subscribers);
 app.use('/api/v1', notifications);
+app.use('/api/v1', payloads);
 
 // connect to database
 mongoose.connect('mongodb://@localhost/supn');

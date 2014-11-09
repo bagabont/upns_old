@@ -2,6 +2,7 @@ var router = require('express').Router(),
     bodyParser = require('body-parser'),
     httpErrors = require('../components/httpErrors'),
     messenger = require('../components/unifiedMessenger'),
+    mongoose = require('mongoose'),
     Notification = require('../models/notification');
 
 router.use(bodyParser.json());
@@ -45,33 +46,49 @@ router.route('/notifications')
         return res.status(204).send();
     });
 
+router.param('id', function (req, res, next, id) {
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        throw new Error('Invalid ID');
+    }
+    Notification.findOne({_id: id}, function (err, notification) {
+        if (err) {
+            return next(err);
+        }
+        req.notification = notification;
+        next();
+    });
+});
+
 router.route('/notifications/:id')
     .get(function (req, res, next) {
-        Notification.findOne({_id: req.params.id}, function (err, notification) {
-            if (err) {
-                return next(err);
-            }
-            res.send(notification);
-        });
+        res.send(req.notification);
     })
     .post(function (req, res, next) {
-        Notification.findOne({_id: req.params.id}, function (err, notification) {
-            if (err) {
-                return next(err);
-            }
-            if (!notification || !notification.headers || !notification.payload || !notification.target) {
-                return next(httpErrors.BadRequest);
-            }
+        var notification = req.notification;
 
-            // push notification to subscribers
-            messenger.send(notification);
+        if (!notification || !notification.headers || !notification.payload || !notification.target) {
+            return next(httpErrors.BadRequest);
+        }
 
-            // send back notification ID in response
-            return res.send({
-                notification: {
-                    id: notification._id
-                }
-            });
+        // push notification to subscribers
+        messenger.send(notification);
+
+        // send back notification ID in response
+        return res.send({
+            notification: {
+                id: notification._id
+            }
+        });
+    });
+
+router.route('/notifications/:id/payload')
+    .get(function (req, res, next) {
+        var notification = req.notification;
+        if (!notification) {
+            res.status(404).send(httpErrors.NotFound);
+        }
+        res.send({
+            payload: notification.payload
         });
     });
 

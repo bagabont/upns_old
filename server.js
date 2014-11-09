@@ -3,7 +3,6 @@ var express = require('express'),
     httpErrors = require('./components/httpErrors'),
     services = require('./routes/services'),
     notifications = require('./routes/notifications'),
-    payloads = require('./routes/payloads'),
     subscribers = require('./routes/subscribers');
 
 // create express server
@@ -15,7 +14,6 @@ app.disable('etag');
 app.use('/api/v1', services);
 app.use('/api/v1', subscribers);
 app.use('/api/v1', notifications);
-app.use('/api/v1', payloads);
 
 // connect to database
 mongoose.connect('mongodb://@localhost/supn');
@@ -25,22 +23,13 @@ app.use(function (req, res, next) {
     next(httpErrors.NotFound);
 });
 
-
-if (app.get('env') === 'development') {
-    app.use(function (err, req, res, next) {
-        res.status(err.statusCode || 500)
-            .send({
-                message: err.message,
-                error: err
-            });
-    });
-}
-
+// error handler
 app.use(function (err, req, res, next) {
+    var errorData = app.get('env') === 'development' ? err : {};
     res.status(err.statusCode || 500)
         .send({
             message: err.message,
-            error: {}
+            error: errorData
         });
 });
 

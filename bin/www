@@ -1,8 +1,0 @@
-#!/usr/bin/env node
-var debug = require('debug')('SUPN'),
-    server = require('../server'),
-    port = process.env.PORT || 3000;
-
-var listener = server.listen(port, function () {
-    debug('Server listening on port ' + port + '. Environment: ' + server.settings.env);
-});

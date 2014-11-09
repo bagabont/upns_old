@@ -1,36 +1,15 @@
-var express = require('express'),
-    mongoose = require('mongoose'),
-    httpErrors = require('./components/httpErrors'),
-    services = require('./routes/services'),
-    notifications = require('./routes/notifications'),
-    subscribers = require('./routes/subscribers');
+#!/usr/bin/env node
 
-// create express server
+var express = require('express');
+var env = process.env.NODE_ENV || 'development';
+var config = require('./config/config')[env];
 var app = express();
-app.disable('x-powered-by');
-app.disable('etag');
 
-// middleware API routes
-app.use('/api/v1', services);
-app.use('/api/v1', subscribers);
-app.use('/api/v1', notifications);
+require('./config/express')(app);
+require('./config/routes')(app);
+require('./config/mongoose')(config);
 
-// connect to database
-mongoose.connect('mongodb://@localhost/supn');
-
-// catch 404 and forward to error handler
-app.use(function (req, res, next) {
-    next(httpErrors.NotFound);
+app.listen(config.port, function () {
+    console.log('Server listening on port ' + config.port);
+    console.log('Server Environment: ' + env);
 });
-
-// error handler
-app.use(function (err, req, res, next) {
-    var errorData = app.get('env') === 'development' ? err : {};
-    res.status(err.statusCode || 500)
-        .send({
-            message: err.message,
-            error: errorData
-        });
-});
-
-module.exports = app;

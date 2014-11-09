@@ -1,37 +1,70 @@
-# Simple Unified Push Notifications (V1)
+# Smart Unified Push Notifications (V1)
 
 Requirements:
 
-`Not clear yet`
+`In progress ...`
 
-## Client-Push Server Integration
+## Client Integration
 
 ### Registration
 
-`Not implemented`
-
-### Handling Push Notifications on Device
-
-`Not implemented`
-
-## Server-Push Server Integration
-### Send Notification
 **Request:**
 
 ```httph
+POST /api/v1/subscribers/:id?platform={platform}&service={service_name}&token={push_token}
+```
+
+**Response:**
+
+```httph
+Status: 201 Created || 204 No Content
+```
+
+### Retrieving Payload of a Push Notification
+
+To retrieve a push notification's payload you should send the ID of the notification as a parameter.
+
+**Request:**
+
+```httph
+GET /api/v1/payloads:id
+
+```
+**Response:**
+
+```httph-json
+Status: 200 OK
+
+{
+    "payload": {
+        "category": "animals",
+        "watermark": "Our new Hippo is here!!!"
+    }
+}
+```
+
+## Server Integration
+### Send Notification
+
+#### Create and send push notification
+**Request:**
+
+```httph-json
 POST /api/v1/notifications
 Content-Type: application/json
 
 {
-  "payload": {
-    "text": "Custom text",
-    "type": "text",
-	"content": "Content text"
-  },
-  "target": {
-    "services": ["test", "test1"],
-    "platforms": ["ios", "android", "wp"]
-  }
+    "headers": {
+        "text": "New text push received!",
+        "type": "text"
+    },
+    "payload": {
+        "content": "Content text"
+    },
+    "target": {
+        "services": [ "test", "test1" ],
+        "platforms": [ "ios", "android", "windows" ]
+    }
 }
 ```
 
@@ -45,65 +78,63 @@ notification:{
 }
 ```
 
-#### Payload
+#### Resend push notification
+**Request:**
+
+```httph-json
+POST /api/v1/notifications/:id
+```
+
+**Response:**
+
+```httph-json
+Status: 200 OK
+
+notification:{
+  id: "545e556514a01fbc16773558"
+}
+```
+
+#### Headers
 ##### Type
-Allows different resources to be opened via push notifications:
+Allows different resources to be opened via push notifications. Moreover you could make client to open URL when user clicks on push notification. For URL notification you could set in which browser should the URL be opened and browser title.  
 
-Moreover you could make client to open URL when user clicks on push notification.
-
-For resource notification types you should send id of resource in payload parameters.  
-Example:  
-
+**Request:**
 ```httph
 POST /api/v1/notifications
 Content-Type: application/json
 
 {
-  "payload": {
-    "text": "Custom text",
-    "type": "item",
-    "id": "item_id"
-  },
-  "target": {
-    "services": ["test", "test1"],
-    "platforms": ["ios", "android", "wp"]
-  }
+    "headers": {
+        "text": "New LINK push received!",
+        "type": "link"
+    },
+    "payload": {
+    	"url" : "http://example.com",
+    	"default_browser" : true (for Default Browser) / false (for Internal Browser),
+    	"browser_title" : "Example"
+    },
+    "target": {
+    	"services": ["test", "test1"],
+    	"platforms": ["ios", "android", "wp"]
+    }
 }
 ```
 
-For URL notification you could set in which browser should the URL be opened and browser title.  
-Example:  
+#### Payload
 
-```httph
-POST /api/v1/notifications
-Content-Type: application/json
-
-{
-  "payload": {
-    "text": "Custom text",
-    "type" : "url",
-    "url" : "http://example.com",
-    "default_browser" : true (for Default Browser) / false (for Internal Browser),
-    "browser_title" : "Example"
-  },
-  "target": {
-    "services": ["test", "test1"],
-    "platforms": ["ios", "android", "wp"]
-  }
-}
-```
 
 #### Target
 Use JSON format for target request param. You can target by following params:
 
 - services
-- platforms
+- platforms (Valid: ["windows", "ios", "android"])
 - id
 - locale
 - country
 - version
 
-##### Examples:
+Example:
 Target all iOS devices from Singapore with application version (less than or equal to 2) or (more than or equal to 4, but less than 5)
 
 ```json
@@ -111,16 +142,5 @@ Target all iOS devices from Singapore with application version (less than or equ
   "platforms" : "ios",
   "country" : "sg",
   "version" : ["<= 2","~> 4"]
-}
-```
-
-Filter all android devices from all countries except Bulgaria
-
-```json
-{
-  "platforms" : "android",
-  "country" : {
-    "except" : "bg"
-  }
 }
 ```

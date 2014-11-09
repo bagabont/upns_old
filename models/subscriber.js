@@ -7,7 +7,7 @@ var subscriberSchema = new Schema({
     service: {type: String, required: true, trim: true, index: true},
     platform: {type: String, required: true, index: true},
     country: {type: String, required: false, index: true},
-    app_version: {type: String, required: false, index: true},
+    version: {type: String, required: false, index: true},
     locale: {type: String}
 });
 

@@ -9,13 +9,11 @@ Requirements:
 ### Registration
 
 **Request:**
-
 ```httph
 POST /api/v1/subscribers/:id?platform={platform}&service={service_name}&token={push_token}
 ```
 
 **Response:**
-
 ```httph
 Status: 201 Created || 204 No Content
 ```
@@ -25,16 +23,15 @@ Status: 201 Created || 204 No Content
 To retrieve a push notification's payload you should send the ID of the notification as a parameter.
 
 **Request:**
-
 ```httph
 GET /api/v1/payloads:id
-
 ```
+
 **Response:**
-
-```httph-json
+```httph
 Status: 200 OK
-
+```
+```json
 {
     "payload": {
         "category": "animals",
@@ -48,11 +45,11 @@ Status: 200 OK
 
 #### Create and send push notification
 **Request:**
-
-```httph-json
+```httph
 POST /api/v1/notifications
 Content-Type: application/json
-
+```
+```json
 {
     "headers": {
         "text": "New text push received!",
@@ -69,10 +66,10 @@ Content-Type: application/json
 ```
 
 **Response:**
-
-```httph-json
+```httph
 Status: 200 OK
-
+```
+```json
 notification:{
   id: "545e556514a01fbc16773558"
 }
@@ -80,16 +77,15 @@ notification:{
 
 #### Resend push notification
 **Request:**
-
-```httph-json
+```httph
 POST /api/v1/notifications/:id
 ```
 
 **Response:**
-
-```httph-json
+```httph
 Status: 200 OK
-
+```
+```json
 notification:{
   id: "545e556514a01fbc16773558"
 }
@@ -103,7 +99,8 @@ Allows different resources to be opened via push notifications. Moreover you cou
 ```httph
 POST /api/v1/notifications
 Content-Type: application/json
-
+```
+```json
 {
     "headers": {
         "text": "New LINK push received!",

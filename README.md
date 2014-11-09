@@ -71,7 +71,7 @@ Status: 200 OK
 ```
 ```json
 notification:{
-  id: "545e556514a01fbc16773558"
+  "id": "545e556514a01fbc16773558"
 }
 ```
 
@@ -87,13 +87,13 @@ Status: 200 OK
 ```
 ```json
 notification:{
-  id: "545e556514a01fbc16773558"
+  "id": "545e556514a01fbc16773558"
 }
 ```
 
 #### Headers
 ##### Type
-Allows different resources to be opened via push notifications. Moreover you could make client to open URL when user clicks on push notification. For URL notification you could set in which browser should the URL be opened and browser title.  
+Allows different resources to be opened via push notifications. Moreover you could make client to open URL when user clicks on push notification. For URL notification you could set in which browser should the URL be opened and browser title. For launching in the default browser set `"default_browser" :true`, for internal browser `"default_browser" :false`.  
 
 **Request:**
 ```httph
@@ -108,8 +108,8 @@ Content-Type: application/json
     },
     "payload": {
     	"url" : "http://example.com",
-    	"default_browser" : true (for Default Browser) / false (for Internal Browser),
-    	"browser_title" : "Example"
+    	"default_browser" : true,
+    	"browser_title" : "Custom title"
     },
     "target": {
     	"services": ["test", "test1"],

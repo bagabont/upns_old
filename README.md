@@ -1,4 +1,4 @@
-# # Unified Push Notifications Service (V1)
+# Unified Push Notifications Service (V1)
 
 Requirements:
 

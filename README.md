@@ -1,1 +1,1 @@
-# SUPN
+# Unified Push Notifications Service

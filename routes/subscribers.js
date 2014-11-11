@@ -1,6 +1,5 @@
 var router = require('express').Router(),
-    Subscriber = require('../models/subscriber'),
-    httpErrors = require('../components/httpErrors');
+    Subscriber = require('../models/subscriber');
 
 module.exports = function (passport) {
     router.route('/subscribers')
@@ -24,10 +23,11 @@ module.exports = function (passport) {
         });
     });
 
+    // TODO: Allow only admins and the subscriber itself to perform deletion or modification
     router.route('/subscribers/:id?')
         .get(function (req, res, next) {
             if (!req.subscriber) {
-                return next(httpErrors.NotFound);
+                return res.status(404).send();
             } else {
                 res.send(req.subscriber);
             }
@@ -52,21 +52,20 @@ module.exports = function (passport) {
                 var subscriber = new Subscriber({
                     id: id,
                     token: token,
-                    platform: platform,
-                    service: service
+                    platform: platform.toLowerCase(),
+                    service: service.toLowerCase()
                 });
                 subscriber.save(function (err) {
                     if (err) {
                         return next(err);
                     }
-                    console.log('Subscriber id: ' + subscriber.id);
                     return res.status(201).send();
                 });
             }
         })
         .put(function (req, res, next) {
             if (!req.subscriber) {
-                return next(httpErrors.NotFound);
+                return res.status(404).send();
             }
             var query = {id: req.params.id};
             var update = {token: req.query.token};
@@ -79,7 +78,7 @@ module.exports = function (passport) {
         })
         .delete(function (req, res, next) {
             if (!req.subscriber) {
-                return next(httpErrors.NotFound);
+                return res.status(404).send();
             }
             var query = {id: req.params.id};
             Subscriber.findOneAndRemove(query, function (err) {

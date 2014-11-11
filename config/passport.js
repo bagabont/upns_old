@@ -4,7 +4,7 @@
 var User = require('../models/user'),
     BasicStrategy = require('passport-http').BasicStrategy;
 
-module.exports = function (app, passport) {
+module.exports = function (passport) {
     passport.use(new BasicStrategy(function (username, password, done) {
             User.findOne({username: username}, function (err, user) {
                 if (err) {
@@ -20,7 +20,5 @@ module.exports = function (app, passport) {
             });
         }
     ));
-
-    app.use(passport.initialize());
 };
 

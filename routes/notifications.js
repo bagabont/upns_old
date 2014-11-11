@@ -1,7 +1,6 @@
 var router = require('express').Router(),
     bodyParser = require('body-parser'),
-    httpErrors = require('../components/httpErrors'),
-    messenger = require('../components/unifiedMessenger'),
+    messenger = require('../components/pusher'),
     mongoose = require('mongoose'),
     Notification = require('../models/notification');
 
@@ -21,7 +20,7 @@ module.exports = function (passport) {
         .post(function (req, res, next) {
             var data = req.body;
             if (!data || !data.headers || !data.payload || !data.target) {
-                return next(httpErrors.BadRequest);
+                return res.status(400).send();
             }
             // store notification.
             var notification = new Notification(data);
@@ -70,7 +69,7 @@ module.exports = function (passport) {
             var notification = req.notification;
 
             if (!notification || !notification.headers || !notification.payload || !notification.target) {
-                return next(httpErrors.BadRequest);
+                return res.status(400).send();
             }
             // push notification to subscribers
             messenger.send(notification);
@@ -87,7 +86,7 @@ module.exports = function (passport) {
         .get(function (req, res, next) {
             var notification = req.notification;
             if (!notification) {
-                res.status(404).send(httpErrors.NotFound);
+                res.status(404).send();
             }
             res.send({
                 payload: notification.payload

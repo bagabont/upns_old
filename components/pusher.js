@@ -2,15 +2,13 @@
  * Created by mmarinov on 08-Nov-14.
  */
 var mpns = require('mpns'),
-    apn = require('apn'),
-    gcm = require('node-gcm'),
     Subscriber = require('../models/subscriber');
 
-var UnifiedMessenger = function () {
+var Pusher = function () {
 
 };
 
-UnifiedMessenger.prototype.send = function (notification) {
+Pusher.prototype.send = function (notification) {
     if (!notification.target) {
         throw new Error('Target not defined.');
     }
@@ -35,7 +33,7 @@ UnifiedMessenger.prototype.send = function (notification) {
                 var platform = subscribers[i].platform,
                     token = subscribers[i].token;
 
-                switch (platform.toLowerCase()) {
+                switch (platform) {
                     case 'windows':
                         pushToWindows(token, notification);
                         break;
@@ -54,7 +52,7 @@ UnifiedMessenger.prototype.send = function (notification) {
 function pushToWindows(token, notification) {
     var title = notification.headers.text.toString(),
         content = notification.headers.type == 'text' ? notification.payload.content : '',
-        id = notification._id;
+        id = notification.id;
 
     var options = {text1: title, text2: content, param: '?nid=' + id};
     mpns.sendToast(token, options, function (err) {
@@ -64,4 +62,4 @@ function pushToWindows(token, notification) {
     });
 }
 
-module.exports = new UnifiedMessenger();
+module.exports = new Pusher();

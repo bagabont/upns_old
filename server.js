@@ -7,12 +7,12 @@ var https = require('https'),
 
 var app = express();
 var env = process.env.NODE_ENV || 'development';
-var config = require('./config/config')[env];
+var config = require('./config/server')[env];
 
+// Load configuration
 require('./config/mongoose')(config);
-require('./config/passport')(app, passport);
-require('./config/express')(app);
-require('./config/routes')(app, passport);
+require('./config/passport')(passport);
+require('./config/express')(app, passport);
 
 var options = {
     pfx: config.certificate,
@@ -43,10 +43,10 @@ createAdminAccount();
 
 // Create an HTTP service.
 http.createServer(app).listen(3030, function () {
-    console.log('Server listening on port 3030. Server Environment: ' + env);
+    console.log('HTTP Server running on port: ' + 3030);
 });
 
 // Create an HTTPS service.
 https.createServer(options, app).listen(config.port, function () {
-    console.log('Server listening on port ' + config.port + '. Server Environment: ' + env);
+    console.log('HTTPS Server running on port ' + config.port);
 });

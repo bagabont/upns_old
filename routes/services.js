@@ -1,6 +1,5 @@
 var router = require('express').Router(),
-    Service = require('../models/service'),
-    httpErrors = require('../components/httpErrors');
+    Service = require('../models/service');
 
 module.exports = function (passport) {
     router.route('/services')
@@ -28,7 +27,7 @@ module.exports = function (passport) {
         .all(passport.authenticate('basic', {session: false}))
         .get(function (req, res, next) {
             if (!req.service) {
-                return next(httpErrors.NotFound);
+                return res.status(404).send();
             }
             res.send(req.service);
         })
@@ -53,7 +52,7 @@ module.exports = function (passport) {
         })
         .put(function (req, res, next) {
             if (!req.service) {
-                return next(httpErrors.NotFound);
+                return res.status(404).send();
             }
             var query = {name: req.params.name};
             var update = {platform: req.query.platform};
@@ -66,7 +65,7 @@ module.exports = function (passport) {
         })
         .delete(function (req, res, next) {
             if (!req.service) {
-                return next(httpErrors.NotFound);
+                return res.status(404).send();
             }
             var query = {name: req.params.name};
             Service.findOneAndRemove(query, function (err) {

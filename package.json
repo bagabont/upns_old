@@ -14,6 +14,8 @@
     "mongoose": "^3.8.18",
     "mpns": "^2.1.0",
     "node-gcm": "^0.9.12",
+    "passport": "^0.2.1",
+    "passport-local": "^1.0.0",
     "wns": "^0.5.3"
   }
 }

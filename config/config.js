@@ -11,12 +11,14 @@ module.exports = {
         rootPath: rootPath,
         db: 'mongodb://@localhost/supn',
         port: process.env.PORT || 3000,
-        certificate: fs.readFileSync(__dirname + '/development.pfx')
+        certificate: fs.readFileSync(__dirname + '/development.pfx'),
+        certificatePassphrase: '123456'
     },
     production: {
         rootPath: rootPath,
-        db: 'mongodb://@localhost/supn',
-        port: process.env.PORT || 3000,
-        certificate: null
+        db: '',
+        port: process.env.PORT,
+        certificate: null,
+        certificatePassphrase: ''
     }
 };

@@ -1,12 +1,13 @@
 /**
  * Created by mmarinov on 09-Nov-14.
  */
-var httpErrors = require('../components/HttpErrors'),
-    services = require('../routes/services'),
-    notifications = require('../routes/notifications'),
-    subscribers = require('../routes/subscribers');
+var httpErrors = require('../components/HttpErrors');
 
-module.exports = function (app) {
+module.exports = function (app, passport) {
+    var services = require('../routes/services')(passport),
+        notifications = require('../routes/notifications')(passport),
+        subscribers = require('../routes/subscribers')(passport);
+
     // set API routers
     app.use('/api/v1', services);
     app.use('/api/v1', subscribers);

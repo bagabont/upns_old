@@ -1,21 +1,15 @@
 {
   "headers": {
-    "text": "New image push received!"
+	"text": "Are you hungry?"
   },
   "payload": {
-    "type": "image",
-    "category": "food",
-    "watermark": "I AM HUNGRY",
-    "source": "http://lorempixel.com"
+	"type": "image",
+	"category": "food",
+	"watermark": "UNIFIED JUNK (FOOD) DELIVERY",
+	"source": "http://lorempixel.com"
   },
   "target": {
-    "services": [
-      "test"
-    ],
-    "platforms": [
-      "ios",
-      "android",
-      "windows"
-    ]
+	"services": ["test"],
+	"platforms": ["ios", "android", "windows"]
   }
 }

@@ -1,13 +1,13 @@
 {
-    "headers": {
-        "text": "New text push received!"        
-    },
-    "payload": {
-		"type": "text",
-        "content": "Content text"
-    },
-    "target": {
-        "services": [ "test", "test1" ],
-        "platforms": [ "ios", "android", "windows" ]
-    }
+  "headers": {
+	"text": "Spam spam spaaaaaaam!!!"
+  },
+  "payload": {
+	"type": "text",
+	"content": "My super cool message is delivered to you thanks to Unified Push Notifications Service. Enjoy!"
+  },
+  "target": {
+	"services": ["test", "test1"],
+	"platforms": ["ios", "android", "windows"]
+  }
 }

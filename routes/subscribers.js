@@ -14,7 +14,7 @@ module.exports = function (passport) {
         });
 
     router.param('id', function (req, res, next, id) {
-        Subscriber.findOne({_id: id}, function (err, subscriber) {
+        Subscriber.findOne({id: id}, function (err, subscriber) {
             if (err) {
                 return next(err);
             }
@@ -24,7 +24,7 @@ module.exports = function (passport) {
     });
 
     // TODO: Allow only admins and the subscriber itself to perform deletion or modification
-    router.route('/subscribers/:id?')
+    router.route('/subscribers/:id')
         .get(function (req, res, next) {
             if (!req.subscriber) {
                 return res.status(404).send();

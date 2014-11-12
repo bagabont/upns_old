@@ -3,10 +3,11 @@ var mongoose = require('mongoose'),
 
 var Notification = new Schema({
     headers: {
-        text: {type: String},
+        text: {type: String}
+    },
+    payload: {
         type: {type: String}
     },
-    payload: {},
     target: {
         id: {type: String},
         services: {type: Array},

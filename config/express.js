@@ -1,14 +1,12 @@
-/**
- * Created by mmarinov on 09-Nov-14.
- */
+var bodyParser = require('body-parser');
+
 module.exports = function (app, passport) {
     app.disable('x-powered-by');
     app.disable('etag');
-
     app.use(passport.initialize());
 
     var services = require('../routes/services')(passport),
-        notifications = require('../routes/notifications')(passport),
+        notifications = require('../routes/notifications')(passport, bodyParser),
         subscribers = require('../routes/subscribers')(passport);
 
     // set API routers

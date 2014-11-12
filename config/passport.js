@@ -1,6 +1,3 @@
-/**
- * Created by mmarinov on 11-Nov-14.
- */
 var User = require('../models/user'),
     BasicStrategy = require('passport-http').BasicStrategy;
 

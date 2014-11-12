@@ -1,10 +1,9 @@
 var router = require('express').Router(),
-    bodyParser = require('body-parser'),
     messenger = require('../components/pusher'),
     mongoose = require('mongoose'),
     Notification = require('../models/notification');
 
-module.exports = function (passport) {
+module.exports = function (passport, bodyParser) {
     router.use(bodyParser.json());
 
     router.route('/notifications')
@@ -30,9 +29,7 @@ module.exports = function (passport) {
                 }
                 // send back notification ID in response
                 res.send({
-                    notification: {
-                        id: notification.id
-                    }
+                    notification: {id: notification.id}
                 });
                 // push notification to subscribers
                 messenger.send(notification);

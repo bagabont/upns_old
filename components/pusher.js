@@ -1,13 +1,13 @@
-/**
- * Created by mmarinov on 08-Nov-14.
- */
 var mpns = require('mpns'),
     Subscriber = require('../models/subscriber');
 
 var Pusher = function () {
 
 };
-
+/**
+ * Sends a push notification to all subscribers listed as target.
+ * @param notification {Notification} Push notification
+ */
 Pusher.prototype.send = function (notification) {
     if (!notification.target) {
         throw new Error('Target not defined.');
@@ -28,14 +28,13 @@ Pusher.prototype.send = function (notification) {
             if (err) {
                 throw err;
             }
-
+            var subscriber;
             for (var i = 0; i < subscribers.length; i += 1) {
-                var platform = subscribers[i].platform,
-                    token = subscribers[i].token;
+                subscriber = subscribers[i];
 
-                switch (platform) {
+                switch (subscriber.platform) {
                     case 'windows':
-                        pushToWindows(token, notification);
+                        pushToWindows(subscriber.token, notification);
                         break;
                     case 'ios':
                         console.log('Not implemented');
@@ -45,8 +44,7 @@ Pusher.prototype.send = function (notification) {
                         break;
                 }
             }
-        }
-    );
+        });
 };
 
 function pushToWindows(token, notification) {

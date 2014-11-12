@@ -1,6 +1,3 @@
-/**
- * Created by mmarinov on 09-Nov-14.
- */
 var path = require('path'),
     fs = require('fs');
 

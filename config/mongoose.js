@@ -1,6 +1,3 @@
-/**
- * Created by mmarinov on 09-Nov-14.
- */
 var mongoose = require('mongoose');
 
 module.exports = function (config) {

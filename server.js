@@ -7,7 +7,7 @@ var https = require('https'),
 
 var app = express();
 var env = process.env.NODE_ENV || 'development';
-var config = require('./config/server')[env];
+var config = require('./config/config')[env];
 
 // Load configuration
 require('./config/mongoose')(config);

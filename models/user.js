@@ -1,28 +1,12 @@
-/**
- * Created by mmarinov on 11-Nov-14.
- */
 var crypto = require('crypto'),
     mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 var User = new Schema({
-    username: {
-        type: String,
-        unique: true,
-        required: true
-    },
-    hashedPassword: {
-        type: String,
-        required: true
-    },
-    salt: {
-        type: String,
-        required: true
-    },
-    created: {
-        type: Date,
-        default: Date.now
-    }
+    username: {type: String, unique: true, required: true},
+    hashedPassword: {type: String, required: true},
+    salt: {type: String, required: true},
+    created: {type: Date, default: Date.now}
 });
 
 User.methods.encryptPassword = function (password) {

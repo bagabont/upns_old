@@ -1,0 +1,13 @@
+{
+    "headers": {
+        "text": "New text push received!"        
+    },
+    "payload": {
+		"type": "text",
+        "content": "Content text"
+    },
+    "target": {
+        "services": [ "test", "test1" ],
+        "platforms": [ "ios", "android", "windows" ]
+    }
+}

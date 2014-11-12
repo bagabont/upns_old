@@ -1,4 +1,5 @@
-var bodyParser = require('body-parser');
+var bodyParser = require('body-parser'),
+    User = require('../models/user');
 
 module.exports = function (app, passport) {
     app.disable('x-powered-by');
@@ -22,7 +23,7 @@ module.exports = function (app, passport) {
     });
 
     // error handler
-    app.use(function (err, req, res, next) {
+    app.use(function (err, req, res) {
         // do not expose error data in production
         var errorData = app.get('env') === 'development' ? err : {};
         res.status(err.statusCode || 500)
@@ -31,4 +32,25 @@ module.exports = function (app, passport) {
                 error: errorData
             });
     });
+
+    (function createAdminAccount() {
+        User.findOne({username: 'admin'}, function (err, user) {
+            if (err) {
+                throw err;
+            }
+            if (user) {
+                return
+            }
+            user = new User({
+                username: 'admin',
+                password: 'admin'
+            });
+            user.save(function (err) {
+                if (err) {
+                    throw err;
+                }
+                console.log('Admin account created!');
+            });
+        });
+    })();
 };

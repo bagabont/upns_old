@@ -25,7 +25,7 @@ module.exports = function (passport) {
 
     router.route('/services/:name')
         .all(passport.authenticate('basic', {session: false}))
-        .get(function (req, res, next) {
+        .get(function (req, res) {
             if (!req.service) {
                 return res.status(404).send();
             }

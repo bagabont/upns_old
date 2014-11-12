@@ -2,7 +2,6 @@
 var https = require('https'),
     http = require('http'),
     passport = require('passport'),
-    User = require('./models/user'),
     express = require('express');
 
 var app = express();
@@ -18,28 +17,6 @@ var options = {
     pfx: config.certificate,
     passphrase: config.certificatePassphrase
 };
-
-function createAdminAccount() {
-    User.findOne({username: 'admin'}, function (err, user) {
-        if (err) {
-            throw err;
-        }
-        if (user) {
-            return
-        }
-        user = new User({
-            username: 'admin',
-            password: 'admin'
-        });
-        user.save(function (err) {
-            if (err) {
-                throw err;
-            }
-            console.log('Admin account created!');
-        });
-    });
-}
-createAdminAccount();
 
 // Create an HTTP service.
 http.createServer(app).listen(3030, function () {

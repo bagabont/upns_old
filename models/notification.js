@@ -16,6 +16,6 @@ var Notification = new Schema({
         country: {type: Array},
         version: {type: String}
     }
-});
+}, {strict: false});
 
 module.exports = mongoose.model('notifications', Notification);

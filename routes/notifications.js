@@ -46,11 +46,14 @@ module.exports = function (passport, bodyParser) {
 
     router.param('id', function (req, res, next, id) {
         if (!mongoose.Types.ObjectId.isValid(id)) {
-            throw new Error('Invalid ID');
+            next(new Error('Invalid ID'));
         }
         Notification.findOne({_id: id}, function (err, notification) {
             if (err) {
-                return next(err);
+                return next(err)
+            }
+            else if (!notification) {
+                return res.status(404).send();
             }
             req.notification = notification;
             next();
@@ -59,10 +62,10 @@ module.exports = function (passport, bodyParser) {
 
     router.route('/notifications/:id')
         .all(passport.authenticate('basic', {session: false}))
-        .get(function (req, res, next) {
+        .get(function (req, res) {
             res.send(req.notification);
         })
-        .post(function (req, res, next) {
+        .post(function (req, res) {
             var notification = req.notification;
 
             if (!notification || !notification.headers || !notification.payload || !notification.target) {
@@ -77,10 +80,19 @@ module.exports = function (passport, bodyParser) {
                     id: notification.id
                 }
             });
+        })
+        .delete(function (req, res) {
+            Notification.findOneAndRemove({_id: req.notification}, function (err) {
+                if (err) {
+                    console.log(err);
+                    return res.status(404).send();
+                }
+                res.end();
+            });
         });
 
     router.route('/notifications/:id/payload')
-        .get(function (req, res, next) {
+        .get(function (req, res) {
             var notification = req.notification;
             if (!notification) {
                 res.status(404).send();

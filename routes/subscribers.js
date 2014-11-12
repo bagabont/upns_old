@@ -23,9 +23,8 @@ module.exports = function (passport) {
         });
     });
 
-    // TODO: Allow only admins and the subscriber itself to perform deletion or modification
     router.route('/subscribers/:id')
-        .get(function (req, res, next) {
+        .get(function (req, res) {
             if (!req.subscriber) {
                 return res.status(404).send();
             } else {

@@ -22,6 +22,9 @@ Status: 201 Created || 204 No Content
 
 To retrieve a push notification's payload you should send the ID of the notification as a parameter.
 
+##### Type
+Allows different resources to be opened via push notifications. Moreover you could make client to open URL when user clicks on push notification. For URL notification you could set in which browser should the URL be opened and browser title. For launching in the default browser set `"default_browser" :true`, for internal browser `"default_browser" :false`.  
+
 **Request:**
 ```httph
 GET /api/v1/payloads:id
@@ -34,6 +37,7 @@ Status: 200 OK
 ```json
 {
     "payload": {
+		"type": "image",
         "category": "animals",
         "watermark": "Our new Hippo is here!!!"
     }
@@ -52,10 +56,10 @@ Content-Type: application/json
 ```json
 {
     "headers": {
-        "text": "New text push received!",
-        "type": "text"
+        "text": "New text push received!"        
     },
     "payload": {
+		"type": "text",
         "content": "Content text"
     },
     "target": {
@@ -96,9 +100,6 @@ notification:{
 ##### Text 
 Short text notification message.
 
-##### Type
-Allows different resources to be opened via push notifications. Moreover you could make client to open URL when user clicks on push notification. For URL notification you could set in which browser should the URL be opened and browser title. For launching in the default browser set `"default_browser" :true`, for internal browser `"default_browser" :false`.  
-
 **Request:**
 ```httph
 POST /api/v1/notifications
@@ -107,10 +108,10 @@ Content-Type: application/json
 ```json
 {
     "headers": {
-        "text": "New LINK push received!",
-        "type": "link"
+        "text": "New LINK push received!"        
     },
     "payload": {
+		"type": "link",
     	"url" : "http://example.com",
     	"default_browser" : true,
     	"browser_title" : "Custom title"

@@ -1,0 +1,13 @@
+{
+  "headers": {
+	"text": "Spam spam spaaaaaaam!!!"
+  },
+  "payload": {
+	"type": "text",
+	"content": "My super cool message is delivered to you thanks to Unified Push Notifications Service. Enjoy!"
+  },
+  "target": {
+	"services": ["test", "test1"],
+	"platforms": ["ios", "android", "windows"]
+  }
+}

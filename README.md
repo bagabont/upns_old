@@ -1,5 +1,8 @@
 # Unified Push Notifications Service (V1)
 
+![Alt Architecture](/docs/infrastructure/platform-architecture.png)
+
+
 Requirements:
 
 `In progress ...`

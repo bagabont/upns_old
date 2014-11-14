@@ -1,6 +1,6 @@
 # Unified Push Notifications Service (V1)
 
-![Alt Architecture](/docs/infrastructure/platform-architecture.png)
+![Alt Architecture](/Docs/platform-architecture.png)
 
 
 Requirements:

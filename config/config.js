@@ -13,9 +13,9 @@ module.exports = {
     },
     production: {
         rootPath: rootPath,
-        db: '',
+        db: ' mongodb://admin:admin@ds055680.mongolab.com:55680/upns',
         port: process.env.PORT,
-        certificate: null,
+        certificate: fs.readFileSync(__dirname + '/cert_dev.pfx'),
         certificatePassphrase: ''
     }
 };

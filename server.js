@@ -19,11 +19,11 @@ var options = {
 };
 
 // Create an HTTP service.
-http.createServer(app).listen(3030, function () {
-    console.log('HTTP Server running on port: ' + 3030 + " " + env);
+http.createServer(app).listen(config.port, function () {
+    console.log('HTTP Server running on port: ' + config.port + " " + env);
 });
-
-// Create an HTTPS service.
-https.createServer(options, app).listen(config.port, function () {
-    console.log('HTTPS Server running on port ' + config.port + " " + env);
-});
+//
+//// Create an HTTPS service.
+//https.createServer(options, app).listen(config.port, function () {
+//    console.log('HTTPS Server running on port ' + config.port + " " + env);
+//});

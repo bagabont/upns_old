@@ -5,21 +5,21 @@ var Pusher = function () {
 
 };
 /**
- * Sends a push notification to all subscribers listed as target.
- * @param notification {Notification} Push notification
+ * Sends an event to all subscribers listed as target.
+ * @param event {Event} Event to be pushed.
  */
-Pusher.prototype.send = function (notification) {
-    if (!notification.target) {
+Pusher.prototype.send = function (event) {
+    if (!event.target) {
         throw new Error('Target not defined.');
     }
-    if (!notification.headers) {
+    if (!event.headers) {
         throw new Error('Headers not defined.');
     }
-    if (!notification.payload) {
+    if (!event.payload) {
         throw new Error('Payload not defined.');
     }
 
-    var target = notification.target;
+    var target = event.target;
 
     Subscriber.find({})
         .where('service').in(target.services)
@@ -34,7 +34,7 @@ Pusher.prototype.send = function (notification) {
 
                 switch (subscriber.platform) {
                     case 'windows':
-                        pushToWindows(subscriber.token, notification);
+                        pushToWindows(subscriber.token, event);
                         break;
                     case 'ios':
                         console.log('Not implemented');
@@ -47,10 +47,10 @@ Pusher.prototype.send = function (notification) {
         });
 };
 
-function pushToWindows(token, notification) {
-    var title = notification.headers.text.toString(),
-        content = notification.headers.type == 'text' ? notification.payload.content : '',
-        id = notification.id;
+function pushToWindows(token, event) {
+    var title = event.headers.text.toString(),
+        content = event.headers.type == 'text' ? event.payload.content : '',
+        id = event.id;
 
     var options = {text1: title, text2: content, param: '?nid=' + id};
     mpns.sendToast(token, options, function (err) {

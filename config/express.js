@@ -7,13 +7,13 @@ module.exports = function (app, passport) {
     app.use(passport.initialize());
 
     var services = require('../routes/services')(passport),
-        notifications = require('../routes/events')(passport, bodyParser),
+        events = require('../routes/events')(passport, bodyParser),
         subscribers = require('../routes/subscribers')(passport);
 
     // set API routers
     app.use('/api/v1', services);
     app.use('/api/v1', subscribers);
-    app.use('/api/v1', notifications);
+    app.use('/api/v1', events);
 
     // catch 404 and forward to error handler
     app.use(function (req, res, next) {

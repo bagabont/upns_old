@@ -23,7 +23,6 @@ User.virtual('password')
         return this._plainPassword;
     });
 
-
 User.methods.checkPassword = function (password) {
     return this.encryptPassword(password) === this.hashedPassword;
 };

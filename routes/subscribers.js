@@ -5,20 +5,34 @@ module.exports = function (passport) {
     router.route('/subscribers')
         .all(passport.authenticate('basic', {session: false}))
         .get(function (req, res, next) {
-            Subscriber.find({}, function (err, subscribers) {
+            Subscriber.find({}, function (err, models) {
                 if (err) {
                     return next(err);
+                }
+                var subscribers = [];
+                for (var i = 0; i < models.length; i++) {
+                    var s = {
+                        object: models[i].object,
+                        id: models[i].id,
+                        token: models[i].token,
+                        service: models[i].service,
+                        platform: models[i].platform,
+                        country: models[i].country,
+                        version: models[i].version,
+                        locale: models[i].locale
+                    };
+                    subscribers.push(s);
                 }
                 res.send(subscribers);
             });
         });
 
     router.param('id', function (req, res, next, id) {
-        Subscriber.findOne({id: id}, function (err, subscriber) {
+        Subscriber.findOne({id: id}, function (err, model) {
             if (err) {
                 return next(err);
             }
-            req.subscriber = subscriber;
+            req.subscriber = model;
             next();
         });
     });
@@ -28,7 +42,17 @@ module.exports = function (passport) {
             if (!req.subscriber) {
                 return res.status(404).send();
             } else {
-                res.send(req.subscriber);
+                var model = req.subscriber;
+                res.send({
+                    object: model.object,
+                    id: model.id,
+                    token: model.token,
+                    service: model.service,
+                    platform: model.platform,
+                    country: model.country,
+                    version: model.version,
+                    locale: model.locale
+                });
             }
         })
         .post(function (req, res, next) {
@@ -48,13 +72,13 @@ module.exports = function (passport) {
                 });
             }
             else {
-                var subscriber = new Subscriber({
+                var model = new Subscriber({
                     id: id,
                     token: token,
                     platform: platform.toLowerCase(),
                     service: service.toLowerCase()
                 });
-                subscriber.save(function (err) {
+                model.save(function (err) {
                     if (err) {
                         return next(err);
                     }

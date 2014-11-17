@@ -1,7 +1,7 @@
 var router = require('express').Router(),
     messenger = require('../components/pusher'),
     mongoose = require('mongoose'),
-    Notification = require('../models/event');
+    Event = require('../models/event');
 
 module.exports = function (passport, bodyParser) {
     router.use(bodyParser.json());
@@ -9,34 +9,46 @@ module.exports = function (passport, bodyParser) {
     router.route('/events')
         .all(passport.authenticate('basic', {session: false}))
         .get(function (req, res, next) {
-            Notification.find({}, function (err, notifications) {
+            Event.find({}, function (err, models) {
                 if (err) {
                     return next(err);
                 }
-                res.send(notifications);
+                var events = [];
+                for (var i = 0; i < models.length; i++) {
+                    var e = {
+                        object: models[i].object,
+                        id: models[i].id,
+                        headers: models[i].headers,
+                        payload: models[i].payload,
+                        target: models[i].target
+                    };
+                    events.push(e);
+                }
+                res.send(events);
             });
         })
         .post(function (req, res, next) {
-            var data = req.body;
-            if (!data || !data.headers || !data.payload || !data.target) {
+            var content = req.body;
+            if (!content || !content.headers || !content.payload || !content.target) {
                 return res.status(400).send();
             }
-            // store notification.
-            var notification = new Notification(data);
-            notification.save(function (err) {
+            // store event.
+            var model = new Event(content);
+            model.save(function (err) {
                 if (err) {
                     return next(err);
                 }
-                // send back notification ID in response
+                // send back event ID in response
                 res.send({
-                    notification: {id: notification.id}
+                    object: model.object,
+                    id: model.id
                 });
-                // push notification to subscribers
-                messenger.send(notification);
+                // push event to subscribers
+                messenger.send(model);
             });
         })
         .delete(function (req, res, next) {
-            Notification.remove().exec(function (err) {
+            Event.remove().exec(function (err) {
                 if (err) {
                     return next(err);
                 }
@@ -48,14 +60,14 @@ module.exports = function (passport, bodyParser) {
         if (!mongoose.Types.ObjectId.isValid(id)) {
             next(new Error('Invalid ID'));
         }
-        Notification.findOne({_id: id}, function (err, notification) {
+        Event.findOne({_id: id}, function (err, model) {
             if (err) {
                 return next(err)
             }
-            else if (!notification) {
+            else if (!model) {
                 return res.status(404).send();
             }
-            req.notification = notification;
+            req.event = model;
             next();
         });
     });
@@ -63,45 +75,49 @@ module.exports = function (passport, bodyParser) {
     router.route('/events/:id')
         .all(passport.authenticate('basic', {session: false}))
         .get(function (req, res) {
-            res.send(req.notification);
+            var model = req.event;
+            res.send({
+                object: model.object,
+                id: model.id,
+                headers: model.headers,
+                payload: model.payload,
+                target: model.target
+            });
         })
         .post(function (req, res) {
-            var notification = req.notification;
+            var model = req.event;
 
-            if (!notification || !notification.headers || !notification.payload || !notification.target) {
+            if (!model || !model.headers || !model.payload || !model.target) {
                 return res.status(400).send();
             }
-            // push notification to subscribers
-            messenger.send(notification);
+            // push event to subscribers
+            messenger.send(model);
 
-            // send back notification ID in response
+            // send back event ID in response
             return res.send({
-                notification: {
-                    id: notification.id
-                }
+                object: event.object,
+                id: event.id
             });
         })
         .delete(function (req, res) {
-            Notification.findOneAndRemove({_id: req.notification}, function (err) {
+            Event.findOneAndRemove({_id: req.event}, function (err) {
                 if (err) {
-                    console.log(err);
                     return res.status(404).send();
                 }
-                res.end();
+                return res.status(204).send();
             });
         });
 
     router.route('/events/:id/payload')
         .get(function (req, res) {
-            var notification = req.notification;
-            if (!notification) {
+            var event = req.event;
+            if (!event) {
                 res.status(404).send();
             }
             res.send({
-                payload: {
-                    type: notification.headers.type,
-                    data: notification.payload
-                }
+                object: 'payload',
+                type: event.headers.type,
+                payload: event.payload
             });
         });
     return router;

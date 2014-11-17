@@ -1,7 +1,8 @@
 # Unified Push Notifications Service (V1)
 
-![Alt Architecture](/Docs/platform-architecture.png)
+[![Build Status](https://travis-ci.org/bagabont/unified-push-notifications-service.svg?branch=dev)](https://travis-ci.org/bagabont/unified-push-notifications-service)
 
+![Alt Architecture](/Docs/platform-architecture.png)
 
 Requirements:
 
@@ -30,7 +31,7 @@ Allows different resources to be opened via push notifications. Moreover you cou
 
 **Request:**
 ```httph
-GET /api/v1/payloads:id
+GET /api/v1/events/:id/payload
 ```
 
 **Response:**
@@ -53,17 +54,17 @@ Status: 200 OK
 #### Create and send push notification
 **Request:**
 ```httph
-POST /api/v1/notifications
+POST /api/v1/events
 Content-Type: application/json
 ```
 ```json
 {
     "headers": {
+        "type": "text",
         "text": "New text push received!"        
     },
     "payload": {
-		"type": "text",
-        "content": "Content text"
+		"content": "Content text"
     },
     "target": {
         "services": [ "test", "test1" ],

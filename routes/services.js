@@ -5,20 +5,29 @@ module.exports = function (passport) {
     router.route('/services')
         .all(passport.authenticate('basic', {session: false}))
         .get(function (req, res, next) {
-            Service.find({}, function (err, services) {
+            Service.find({}, function (err, models) {
                 if (err) {
                     return next(err);
+                }
+                var services = [];
+                for (var i = 0; i < models.length; i++) {
+                    var s = {
+                        object: models[i].object,
+                        name: models[i].name,
+                        platform: models[i].platform
+                    };
+                    services.push(s);
                 }
                 res.send(services);
             });
         });
 
     router.param('name', function (req, res, next, name) {
-        Service.findOne({name: name}, function (err, service) {
+        Service.findOne({name: name}, function (err, model) {
             if (err) {
                 return next(err);
             }
-            req.service = service;
+            req.service = model;
             next();
         });
     });
@@ -29,7 +38,12 @@ module.exports = function (passport) {
             if (!req.service) {
                 return res.status(404).send();
             }
-            res.send(req.service);
+            var service = req.service;
+            res.send({
+                object: "service",
+                id: service.id,
+                platform: service.platform
+            });
         })
         .post(function (req, res, next) {
             if (req.service) {
@@ -39,11 +53,11 @@ module.exports = function (passport) {
             var name = req.params.name,
                 platform = req.query.platform;
 
-            var service = new Service({
+            var model = new Service({
                 name: name,
                 platform: platform
             });
-            service.save(function (err) {
+            model.save(function (err) {
                 if (err) {
                     return next(err);
                 }

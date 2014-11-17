@@ -15,6 +15,10 @@ var Event = new Schema({
         country: {type: Array},
         version: {type: String}
     }
-}, {strict: true});
+});
+
+Event.virtual('object').get(function () {
+    return 'event';
+});
 
 module.exports = mongoose.model('events', Event);

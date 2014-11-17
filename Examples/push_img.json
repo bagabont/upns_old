@@ -1,11 +1,11 @@
 {
   "headers": {
-	"text": "Are you hungry?"
+	"type": "image",
+	"text": "Cool animal pictures!"
   },
   "payload": {
-	"type": "image",
-	"category": "food",
-	"watermark": "UNIFIED JUNK FOOD DELIVERY",
+	"category": "animals",
+	"watermark": "UNIFIED ANIMAL DELIVERY",
 	"source": "http://lorempixel.com"
   },
   "target": {

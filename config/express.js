@@ -7,7 +7,7 @@ module.exports = function (app, passport) {
     app.use(passport.initialize());
 
     var services = require('../routes/services')(passport),
-        notifications = require('../routes/notifications')(passport, bodyParser),
+        notifications = require('../routes/events')(passport, bodyParser),
         subscribers = require('../routes/subscribers')(passport);
 
     // set API routers

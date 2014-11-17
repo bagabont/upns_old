@@ -1,12 +1,12 @@
 var router = require('express').Router(),
     messenger = require('../components/pusher'),
     mongoose = require('mongoose'),
-    Notification = require('../models/notification');
+    Notification = require('../models/event');
 
 module.exports = function (passport, bodyParser) {
     router.use(bodyParser.json());
 
-    router.route('/notifications')
+    router.route('/events')
         .all(passport.authenticate('basic', {session: false}))
         .get(function (req, res, next) {
             Notification.find({}, function (err, notifications) {
@@ -60,7 +60,7 @@ module.exports = function (passport, bodyParser) {
         });
     });
 
-    router.route('/notifications/:id')
+    router.route('/events/:id')
         .all(passport.authenticate('basic', {session: false}))
         .get(function (req, res) {
             res.send(req.notification);
@@ -91,14 +91,17 @@ module.exports = function (passport, bodyParser) {
             });
         });
 
-    router.route('/notifications/:id/payload')
+    router.route('/events/:id/payload')
         .get(function (req, res) {
             var notification = req.notification;
             if (!notification) {
                 res.status(404).send();
             }
             res.send({
-                payload: notification.payload
+                payload: {
+                    type: notification.headers.type,
+                    data: notification.payload
+                }
             });
         });
     return router;

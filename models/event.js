@@ -1,13 +1,12 @@
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
-var Notification = new Schema({
+var Event = new Schema({
     headers: {
+        type: {type: String},
         text: {type: String}
     },
-    payload: {
-        type: {type: String}
-    },
+    payload: {},
     target: {
         id: {type: String},
         services: {type: Array},
@@ -16,6 +15,6 @@ var Notification = new Schema({
         country: {type: Array},
         version: {type: String}
     }
-}, {strict: false});
+}, {strict: true});
 
-module.exports = mongoose.model('notifications', Notification);
+module.exports = mongoose.model('events', Event);
